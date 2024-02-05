@@ -23,6 +23,10 @@ public class HomebankingApplication {
 			clientRepository.save(melba);
 
 			System.out.println(melba);
+			Client guille = new Client();
+			guille.setName("Pepito");
+			clientRepository.findAll();
+
 		};
 	}
 

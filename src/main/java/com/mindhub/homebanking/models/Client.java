@@ -13,7 +13,6 @@ public class Client {
     private  Long id;
 
     private String name, lastName, email;
-
     public Client(){
 
     }
@@ -35,7 +34,6 @@ public class Client {
     public void setName(String name) {
         this.name = name;
     }
-
     public String getLastName() {
         return lastName;
     }
