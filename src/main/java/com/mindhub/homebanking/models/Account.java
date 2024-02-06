@@ -4,6 +4,8 @@ package com.mindhub.homebanking.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Account {
@@ -21,6 +23,8 @@ public class Account {
 
     private LocalDate creationDate;
 
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    Set<Transaction> transaction = new HashSet<>();
 
     public Account(){
 
@@ -54,6 +58,15 @@ public class Account {
 
     public LocalDate getCreationDate() {
         return creationDate;
+    }
+
+    public Set<Transaction> getTransactions() {
+        return transaction;
+    }
+
+    public void addTransaction(Transaction transaction){
+        transaction.setAccount(this);
+        this.transaction.add(transaction);
     }
 
     @Override
