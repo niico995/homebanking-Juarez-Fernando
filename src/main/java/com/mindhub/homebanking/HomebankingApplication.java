@@ -1,9 +1,6 @@
 package com.mindhub.homebanking;
 
-import com.mindhub.homebanking.models.Account;
-import com.mindhub.homebanking.models.Client;
-import com.mindhub.homebanking.models.Transaction;
-import com.mindhub.homebanking.models.TransactionType;
+import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
@@ -12,7 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @SpringBootApplication
 public class HomebankingApplication {
@@ -46,6 +47,13 @@ public class HomebankingApplication {
 			transactionRepository.save(trans1);
 			transactionRepository.save(trans2);
 			System.out.println(melba);
+
+
+			Loan hipoteca = new Loan("Hipoteca", 500.000, Set.of(12,24,36,48,60));
+			Loan personal = new Loan("Personal",100.000, Set.of(6,12,24));
+			Loan automocion = new Loan("Automoción", 300.000, Set.of(6,12,24,36));
+
+
 
 		};
 	}

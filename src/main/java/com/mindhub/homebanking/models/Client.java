@@ -1,8 +1,10 @@
 package com.mindhub.homebanking.models;
 
+import com.mindhub.homebanking.DTO.ClientLoanDTO;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,6 +18,10 @@ public class Client {
 
     @OneToMany(mappedBy="cliente", fetch = FetchType.EAGER)
     Set<Account> accounts = new HashSet<>();
+
+    @OneToMany(mappedBy = "client")
+    private Set<ClientLoan> clientLoans = new HashSet<>();
+
     public Client(){
 
     }
@@ -60,6 +66,27 @@ public class Client {
     public void addAccount(Account account){
         account.setCliente(this);
         accounts.add(account);
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    public Set<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
+    public void setClientLoans(Set<ClientLoan> clientLoans) {
+        this.clientLoans = clientLoans;
+    }
+
+    public void addClientLoans(ClientLoan clientLoan){
+        clientLoan.setClient(this);
+        clientLoans.add(clientLoan);
+    }
+
+    public List<ClientLoanDTO> getLoans(){
+        return this.getClientLoans().stream().map(ClientLoanDTO::new).toList();
     }
 
     @Override
