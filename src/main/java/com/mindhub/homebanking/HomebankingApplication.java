@@ -1,9 +1,7 @@
 package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.*;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
-import com.mindhub.homebanking.repositories.TransactionRepository;
+import com.mindhub.homebanking.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,9 +21,10 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository){
 		return args -> {
 			Client melba = new Client( "Melba", "Morel", "melba@mindhub.com");
+			Client fernando = new Client("Fernando", "Juarez", "ferjuarez@mindhub.com");
 			System.out.println(melba);
 
 
@@ -38,21 +37,42 @@ public class HomebankingApplication {
 			melba.addAccount(vin002);
 			melba.addAccount(vin001);
 
+			fernando.addAccount(vin002);
+
 			vin002.addTransaction(trans1);
 			vin001.addTransaction(trans2);
-
-			clientRepository.save(melba);
-			accountRepository.save(vin002);
-			accountRepository.save(vin001);
-			transactionRepository.save(trans1);
-			transactionRepository.save(trans2);
-			System.out.println(melba);
 
 
 			Loan hipoteca = new Loan("Hipoteca", 500.000, Set.of(12,24,36,48,60));
 			Loan personal = new Loan("Personal",100.000, Set.of(6,12,24));
 			Loan automocion = new Loan("Automoción", 300.000, Set.of(6,12,24,36));
 
+			ClientLoan clientLoan1 = new ClientLoan(400.000, 24, melba, hipoteca);
+			ClientLoan clientLoan2 = new ClientLoan(100.000, 12, fernando,personal);
+			ClientLoan clientLoan3 = new ClientLoan(150.000, 24, fernando, automocion);
+
+			hipoteca.addClientLoans(clientLoan1);
+			personal.addClientLoans(clientLoan2);
+			automocion.addClientLoans(clientLoan3);
+
+			melba.addClientLoans(clientLoan1);
+			fernando.addClientLoans(clientLoan2);
+			fernando.addClientLoans(clientLoan3);
+
+			clientRepository.save(fernando);
+			clientRepository.save(melba);
+			accountRepository.save(vin002);
+			accountRepository.save(vin001);
+			transactionRepository.save(trans1);
+			transactionRepository.save(trans2);
+			loanRepository.save(hipoteca);
+			loanRepository.save(personal);
+			loanRepository.save(automocion);
+			clientLoanRepository.save(clientLoan1);
+			clientLoanRepository.save(clientLoan2);
+			clientLoanRepository.save(clientLoan3);
+			System.out.println(melba);
+			System.out.println(fernando);
 
 
 		};
