@@ -11,17 +11,25 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @SpringBootApplication
 public class HomebankingApplication {
+
+
+	public static int cvv(){
+		Random rand = new Random();
+		int randomNumber = rand.nextInt(900) + 100;
+		return randomNumber;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return args -> {
 			Client melba = new Client( "Melba", "Morel", "melba@mindhub.com");
 			Client fernando = new Client("Fernando", "Juarez", "ferjuarez@mindhub.com");
@@ -73,7 +81,20 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientLoan3);
 			System.out.println(melba);
 			System.out.println(fernando);
-
+			LocalDate now = LocalDate.now();
+			LocalDate trhu = LocalDate.now().plusYears(5);
+			Card debitC = new Card(melba.getName()+" "+melba.getLastName(),CardColor.GOLD ,TransactionType.DEBIT, cvv(),"4005-4548-1457-3648", now, trhu);
+			Card creditC = new Card(melba.getName()+" "+melba.getLastName(),CardColor.TITANIUM ,TransactionType.CREDIT, cvv(),"4045-1158-2238-2648", now, trhu);
+			Card debitC2 = new Card(fernando.getName()+" "+fernando.getLastName(),CardColor.SILVER ,TransactionType.DEBIT, cvv(),"4255-4823-4572-4688", now, trhu);
+			melba.addCard(debitC);
+			melba.addCard(creditC);
+			fernando.addCard(debitC2);
+			cardRepository.save(debitC);
+			cardRepository.save(debitC2);
+			cardRepository.save(creditC);
+			clientRepository.save(fernando);
+			clientRepository.save(melba);
+			System.out.println(debitC2);
 
 		};
 	}

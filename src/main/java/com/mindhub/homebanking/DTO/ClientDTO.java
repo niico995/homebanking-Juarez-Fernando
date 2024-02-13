@@ -15,6 +15,8 @@ public class ClientDTO {
 
     private List<ClientLoanDTO> loans;
 
+    private List<CardDTO> cards;
+
     public ClientDTO(){
 
     }
@@ -26,6 +28,7 @@ public class ClientDTO {
         this.email = cliente.getEmail();
         this.accounts = cliente.getAccounts().stream().map(AccountDTO::new).collect(Collectors.toSet());
         this.loans = cliente.getClientLoans().stream().map(ClientLoanDTO::new).collect(Collectors.toList());
+        this.cards = cliente.getCard().stream().map(CardDTO::new).collect(Collectors.toList());
     }
 
     public String getLastName() {
@@ -50,5 +53,17 @@ public class ClientDTO {
 
     public List<ClientLoanDTO> getLoans() {
         return loans;
+    }
+
+    public void setCards(List<CardDTO> cards) {
+        this.cards = cards;
+    }
+
+    public void setLoans(List<ClientLoanDTO> loans) {
+        this.loans = loans;
+    }
+
+    public List<CardDTO> getCards() {
+        return cards;
     }
 }

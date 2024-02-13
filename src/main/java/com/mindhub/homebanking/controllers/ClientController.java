@@ -1,6 +1,8 @@
 package com.mindhub.homebanking.controllers;
 
+import com.mindhub.homebanking.DTO.CardDTO;
 import com.mindhub.homebanking.DTO.ClientDTO;
+import com.mindhub.homebanking.DTO.ClientLoanDTO;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,14 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client not found, sorry, try again later!");
         }
         ClientDTO clientDTO = new ClientDTO(cliente);
+        List<ClientLoanDTO> clientLoanDTOs = cliente.getClientLoans().stream()
+                .map(ClientLoanDTO::new)
+                .collect(Collectors.toList());
+        clientDTO.setLoans(clientLoanDTOs);
+        List<CardDTO> cardDTOs = cliente.getCard().stream()
+                .map(CardDTO::new)
+                .collect(Collectors.toList());
+        clientDTO.setCards(cardDTOs);
         return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
     @GetMapping("/hello")
