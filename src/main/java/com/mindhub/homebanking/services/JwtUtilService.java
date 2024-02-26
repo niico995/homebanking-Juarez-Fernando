@@ -2,10 +2,13 @@ package com.mindhub.homebanking.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -36,6 +39,24 @@ public class JwtUtilService {
         return extractExpiration(token).before((new Date()));
     }
 
-    
+    public Boolean validateToken(String token, UserDetails userDetails){
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String generateToken(UserDetails userDetails){
+        Map<String, Object> claims = new HashMap<>();
+        var rol = userDetails.getAuthorities().stream().toList().get(0);
+        claims.put("rol",rol);
+        return createToken(claims,userDetails.getUsername());
+    }
+
+    private String createToken(Map<String,Object> claims,String subject){
+        return Jwts.builder().claims(claims).subject(subject).issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis()+JWT_TOKEN_VALIDITY))
+                .signWith(SECRET_KEY).compact();
+    }
+
+
 
 }

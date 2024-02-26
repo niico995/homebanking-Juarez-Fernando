@@ -2,6 +2,7 @@ package com.mindhub.homebanking.models;
 
 import com.mindhub.homebanking.DTO.ClientLoanDTO;
 import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,6 +17,26 @@ public class Client {
     private  Long id;
 
     private String name, lastName, email;
+
+    private String password, username;
+
+    private UserRole role = UserRole.CLIENT;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
 
     @OneToMany(mappedBy="cliente", fetch = FetchType.EAGER)
     Set<Account> accounts = new HashSet<>();
@@ -32,10 +53,11 @@ public class Client {
 
     }
 
-    public Client(String name, String lastName, String email) {
+    public Client(String name, String lastName, String email, String password) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
