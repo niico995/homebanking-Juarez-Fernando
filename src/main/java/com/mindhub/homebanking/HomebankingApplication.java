@@ -79,22 +79,27 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientLoan1);
 			clientLoanRepository.save(clientLoan2);
 			clientLoanRepository.save(clientLoan3);
-			System.out.println(melba);
-			System.out.println(fernando);
+
 			LocalDate now = LocalDate.now();
 			LocalDate trhu = LocalDate.now().plusYears(5);
 			Card debitC = new Card(melba.getName()+" "+melba.getLastName(),CardColor.GOLD ,TransactionType.DEBIT, cvv(),"4005-4548-1457-3648", now, trhu);
 			Card creditC = new Card(melba.getName()+" "+melba.getLastName(),CardColor.TITANIUM ,TransactionType.CREDIT, cvv(),"4045-1158-2238-2648", now, trhu);
 			Card debitC2 = new Card(fernando.getName()+" "+fernando.getLastName(),CardColor.SILVER ,TransactionType.DEBIT, cvv(),"4255-4823-4572-4688", now, trhu);
+			Card creditC3 = new Card(melba.getName()+" "+melba.getLastName(),CardColor.SILVER ,TransactionType.CREDIT, cvv(),"4045-1158-2238-2648", now, trhu);
+
 			melba.addCard(debitC);
 			melba.addCard(creditC);
+			melba.addCard(creditC3);
 			fernando.addCard(debitC2);
 			cardRepository.save(debitC);
 			cardRepository.save(debitC2);
 			cardRepository.save(creditC);
+			cardRepository.save(creditC3);
 			clientRepository.save(fernando);
 			clientRepository.save(melba);
 			System.out.println(debitC2);
+			System.out.println(melba);
+			System.out.println(fernando);
 
 		};
 	}
