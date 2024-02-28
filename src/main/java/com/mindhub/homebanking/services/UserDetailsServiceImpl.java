@@ -19,10 +19,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if( client == null){
             throw new UsernameNotFoundException(username);
         }
+        if (username.contains("admin")){
+            return User
+                    .withUsername(username)
+                    .password(client.getPassword())
+                    .roles("ADMIN")
+                    .build();
+        }
+
         return User
                 .withUsername(username)
                 .password(client.getPassword())
-                .roles(client.getRole().toString())
+                .roles("CLIENT")
                 .build();
     }
 
