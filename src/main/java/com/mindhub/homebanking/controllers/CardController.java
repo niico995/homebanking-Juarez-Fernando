@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class CardController {
     @Autowired
     private ClientRepository clientRepository;
 
-    @GetMapping("/")
+   /* @GetMapping("/")
     public ResponseEntity<?> getAllCards(){
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -47,7 +48,18 @@ public class CardController {
         String cardHolder = client.getName() + " " + client.getLastName();
         List<Card> cards = cardRepository.findByCardHolder(cardHolder);
         return new ResponseEntity<>(cards.stream().map(CardDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+    } */
+
+    @GetMapping("/clients/current/cards")
+    public ResponseEntity<?> getCards(){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Client client = clientRepository.findByEmail(userEmail);
+        Set<Card> cards = new HashSet<>();
+        cards = client.getCard();
+
+        return ResponseEntity.ok(cards.stream().map(CardDTO::new).toList());
     }
+
 
     @PostMapping("/")
     private ResponseEntity<?> addCard(@RequestBody CardDTO cardDTO){
@@ -55,7 +67,7 @@ public class CardController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Client client = clientRepository.findByEmail(email);
 
-        List<Card> cards = client.getCard();
+        Set<Card> cards = client.getCard();
 
         Set<Boolean> existTypeColor = cards
                 .stream()

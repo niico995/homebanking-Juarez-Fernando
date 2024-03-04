@@ -45,7 +45,7 @@ public class Client {
     private Set<ClientLoan> clientLoans = new HashSet<>();
 
     @OneToMany(mappedBy = "client")
-    private List<Card> cards = new ArrayList<>();
+    private Set<Card> cards = new HashSet<>();
 
 
 
@@ -117,11 +117,11 @@ public class Client {
         return this.getClientLoans().stream().map(ClientLoanDTO::new).toList();
     }
 
-    public List<Card> getCard() {
+    public Set<Card> getCard() {
         return cards;
     }
 
-    public void setCard(List<Card> card) {
+    public void setCard(Set<Card> card) {
         this.cards = card;
     }
 

@@ -1,5 +1,6 @@
 package com.mindhub.homebanking.controllers;
 
+import com.mindhub.homebanking.DTO.AccountDTO;
 import com.mindhub.homebanking.DTO.NewTransactionDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
@@ -13,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -100,6 +101,20 @@ public class TransactionController {
         accountRepository.save(accountDestination );
 
         return new ResponseEntity<>("Transaction completed successfully", HttpStatus.CREATED);
+    }
+
+
+
+    @GetMapping("/clients/current/transactions")
+    public ResponseEntity<?> getTransactions(){
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Client client = clientRepository.findByEmail(userEmail);
+        Set<Account> accounts = new HashSet<>();
+        accounts = client.getAccounts();
+
+        return ResponseEntity.ok(accounts.stream().map(AccountDTO::new).toList());
+
     }
 
 }
