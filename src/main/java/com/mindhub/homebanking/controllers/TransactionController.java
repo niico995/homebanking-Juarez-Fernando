@@ -61,7 +61,7 @@ public class TransactionController {
             return new ResponseEntity<>("The account origin not exist", HttpStatus.FORBIDDEN);
         }
 
-        if (!accountRepository.existsAccountByNumberAndClient(addTransactionDTO.numberOrigin(), client)){
+        if (!accountRepository.existsAccountByNumberAndCliente(addTransactionDTO.numberOrigin(), client)){
             return new ResponseEntity<>("The account origin not is your account", HttpStatus.FORBIDDEN);
         }
 

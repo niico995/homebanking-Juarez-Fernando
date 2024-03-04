@@ -51,7 +51,7 @@ public class LoanController {
 
 
 
-        if(loanApplicationDTO.loanID().describeConstable().isEmpty() || loanApplicationDTO.loanID() == null){
+        if(loanApplicationDTO.loanID().describeConstable().isEmpty()){
             return new ResponseEntity<>("You have to complete the field 'loanID'", HttpStatus.FORBIDDEN);
         }
 
@@ -85,9 +85,13 @@ public class LoanController {
 
         }
 
-        if(!clientAccounts.contains(loanApplicationDTO.accountDestination())){
+        /*if(!clientAccounts.contains(loanApplicationDTO.accountDestination())){
+            return new ResponseEntity<>("You can't ask a loan for the account " + loanApplicationDTO.accountDestination(), HttpStatus.FORBIDDEN);
+        }*/
+        if(!accountRepository.existsAccountByNumberAndCliente(loanApplicationDTO.accountDestination(), client)){
             return new ResponseEntity<>("You can't ask a loan for the account " + loanApplicationDTO.accountDestination(), HttpStatus.FORBIDDEN);
         }
+
 
         Account account = accountRepository.findByNumber(loanApplicationDTO.accountDestination());
 

@@ -18,7 +18,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-
+@RestController
+@RequestMapping("/api/loan")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CardController {
 
 
