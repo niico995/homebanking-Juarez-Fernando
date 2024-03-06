@@ -107,7 +107,7 @@ public class AuthController {
             String numNewAccount;
 
             do{
-                numNewAccount = "VIN-" + number();
+                numNewAccount = "VIN-" + number()+ number();
             }while (accountRepository.findByNumber(numNewAccount) != null);
 
             Account newAccount = new Account(numNewAccount , 0.0, LocalDate.now());
