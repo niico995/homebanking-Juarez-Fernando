@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
-    //List<Card> findByCardHolder(String cardHolder);
+    List<Card> findByCardHolder(String cardHolder);
     //Boolean existsCardByTypeAndColorAndClient(TransactionType cardType, CardColor color, Client client);
 
     //int countByTypeAndClient(TransactionType cardType, Client client);
