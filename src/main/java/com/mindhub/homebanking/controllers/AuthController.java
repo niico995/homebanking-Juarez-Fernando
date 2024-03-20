@@ -50,6 +50,7 @@ public class AuthController {
     @Autowired
     private AccountRepository accountRepository;
 
+/*
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO){
         try {
@@ -61,6 +62,59 @@ public class AuthController {
             return new ResponseEntity<>("Incorrect", HttpStatus.BAD_REQUEST);
         }
 
+    }*/
+/*
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO){
+        try {
+            UserDetails usermatch = userDetailsService.loadUserByUsername(loginDTO.email());
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(),passwordEncoder.matches(loginDTO.password(), usermatch.getPassword())));
+            if(!passwordEncoder.matches(loginDTO.password(), usermatch.getPassword())){
+                return new ResponseEntity<>("no coinciden las contraseñas", HttpStatus.BAD_REQUEST);
+            }
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.email());
+            final String jwt = jwtUtilService.generateToken(userDetails);
+            return ResponseEntity.ok(jwt);
+        }catch (Exception e) {
+            return new ResponseEntity<>("Incorrect", HttpStatus.BAD_REQUEST);
+        }
+
+    }
+*/
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+        try {
+            if (loginDTO.email().isBlank()) {
+                return new ResponseEntity<>("Email has no content", HttpStatus.BAD_REQUEST);
+            }
+
+            if (!loginDTO.email().contains("@")) {
+                return new ResponseEntity<>("Invalid email", HttpStatus.BAD_REQUEST);
+            }
+
+            if (loginDTO.password().isBlank()) {
+                return new ResponseEntity<>("Password has no content", HttpStatus.BAD_REQUEST);
+            }
+
+            if (clientRepository.findByEmail(loginDTO.email()) == null) {
+                return new ResponseEntity<>("Email not registered", HttpStatus.UNAUTHORIZED);
+            }
+
+            UserDetails usermatch = userDetailsService.loadUserByUsername(loginDTO.email());
+           // authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
+            if (!passwordEncoder.matches(loginDTO.password(), usermatch.getPassword())) {
+                return new ResponseEntity<>("no coinciden las contraseñas", HttpStatus.UNAUTHORIZED);
+            }
+
+            authenticationManager.authenticate((new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password())));
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.email());
+            final String jwt = jwtUtilService.generateToken(userDetails);
+
+            return ResponseEntity.ok(jwt);
+        }catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/register")
